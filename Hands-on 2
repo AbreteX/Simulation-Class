@@ -1,0 +1,131 @@
+#include <iostream>
+using namespace std;
+
+// Clase para realizar la regresion lineal
+class Regresion {
+
+private:
+
+    // Datos de Sales (Y)
+    double sales[9] = {
+        1261.08, 1475.28, 1657.52,
+        2059.05, 2303.76, 2512.64,
+        2751.46, 2787.67, 2939.13
+    };
+
+    // Datos de Advertising (X)
+    double advertising[9] = {
+        43.60, 50.44, 59.01,
+        66.30, 82.36, 92.15,
+        100.51, 110.06, 111.51
+    };
+
+    // Beta 0 = interseccion
+    // Beta 1 = pendiente
+    double beta0;
+    double beta1;
+
+
+public:
+
+    // Metodo para calcular Beta 0 y Beta 1
+    void calcular() {
+
+        double sumaX = 0;
+        double sumaY = 0;
+        double sumaXY = 0;
+        double sumaX2 = 0;
+
+        // Recorremos todos los datos
+        for (int i = 0; i < 9; i++) {
+
+            // Suma de Advertising
+            sumaX = sumaX + advertising[i];
+
+            // Suma de Sales
+            sumaY = sumaY + sales[i];
+
+            // Suma de X por Y
+            sumaXY = sumaXY + advertising[i] * sales[i];
+
+            // Suma de X al cuadrado
+            sumaX2 = sumaX2 + advertising[i] * advertising[i];
+        }
+
+        // Calculo de Beta 1
+        // Beta 1 representa la pendiente
+        beta1 = (9 * sumaXY - sumaX * sumaY) /
+                (9 * sumaX2 - sumaX * sumaX);
+
+        // Calculo de Beta 0
+        // Beta 0 representa la interseccion
+        beta0 = (sumaY - beta1 * sumaX) / 9;
+    }
+
+
+    // Metodo para realizar una prediccion
+    double predecir(double x) {
+
+        // Formula:
+        // Sales = Beta 0 + Beta 1 * Advertising
+        return beta0 + beta1 * x;
+    }
+
+
+    // Metodo para mostrar los resultados
+    void mostrar() {
+
+        cout << "RESULTADOS DE LA REGRESION LINEAL" << endl;
+        cout << "---------------------------------" << endl;
+
+        cout << "Beta 0 = " << beta0 << endl;
+        cout << "Beta 1 = " << beta1 << endl;
+
+        cout << endl;
+
+        cout << "Ecuacion de regresion:" << endl;
+
+        cout << "Sales = " << beta0
+             << " + " << beta1
+             << " * Advertising" << endl;
+    }
+};
+
+
+// Funcion principal
+int main() {
+
+    // Creamos un objeto de la clase Regresion
+    Regresion modelo;
+
+    // Calculamos Beta 0 y Beta 1
+    modelo.calcular();
+
+    // Mostramos los resultados
+    modelo.mostrar();
+
+    cout << endl;
+    cout << "PREDICCIONES" << endl;
+    cout << "------------" << endl;
+
+    // Variable para guardar Advertising
+    double x;
+
+    // Realizamos 5 predicciones
+    for (int i = 1; i <= 5; i++) {
+
+        cout << "Ingrese Advertising "
+             << i << ": ";
+
+        cin >> x;
+
+        // Mostramos las Sales estimadas
+        cout << "Sales estimadas: "
+             << modelo.predecir(x)
+             << endl;
+
+        cout << endl;
+    }
+
+    return 0;
+}
